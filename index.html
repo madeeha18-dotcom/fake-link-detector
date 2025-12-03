@@ -1,0 +1,122 @@
+!DOCTYPE html>
+<html>
+<head>
+    <title>Fake Link Detector</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f2f2f2;
+            padding: 50px;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            width: 400px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid gray;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Fake Link Detector 🔍</h1>
+
+    <div class="container">
+        <input type="text" id="urlInput" placeholder="Enter any link here">
+        <button onclick="checkLink()">Check Link</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function checkLink() {
+
+            let url = document.getElementById("urlInput").value.toLowerCase().trim();
+            let resultDiv = document.getElementById("result");
+
+            let suspiciousPatterns = [
+                "free", "win", "gift", "login", "verify", "update", 
+                "bank", "password", "reset", "claim", "offer"
+            ];
+
+            let dangerousExtensions = [".exe", ".apk", ".zip", ".rar", ".scr"];
+
+            let shortenedUrls = ["bit.ly", "tinyurl", "rb.gy", "t.co", "goo.gl"];
+
+            let lookAlikeDomains = [
+                "g00gle", "faceb00k", "instaqram", "paypa1", 
+                "microsofft", "app1e", "netfIix", "amaz0n"
+            ];
+
+            if (url.startsWith("http://")) {
+                resultDiv.style.color = "orange";
+                resultDiv.innerText = "⚠ Warning: Not secure (uses HTTP)";
+                return;
+            }
+
+            for (let ext of dangerousExtensions) {
+                if (url.endsWith(ext)) {
+                    resultDiv.style.color = "red";
+                    resultDiv.innerText = "❌ Dangerous File Link! Do NOT open.";
+                    return;
+                }
+            }
+
+            for (let short of shortenedUrls) {
+                if (url.includes(short)) {
+                    resultDiv.style.color = "red";
+                    resultDiv.innerText = "❌ Suspicious Shortened Link!";
+                    return;
+                }
+            }
+
+            for (let word of suspiciousPatterns) {
+                if (url.includes(word)) {
+                    resultDiv.style.color = "red";
+                    resultDiv.innerText = "❌ Fake or Phishing Link Detected!";
+                    return;
+                }
+            }
+
+            for (let fake of lookAlikeDomains) {
+                if (url.includes(fake)) {
+                    resultDiv.style.color = "red";
+                    resultDiv.innerText = "❌ Fake Domain! This is not the real site.";
+                    return;
+                }
+            }
+
+            resultDiv.style.color = "green";
+            resultDiv.innerText = "✔ Safe Link";
+        }
+    </script>
+
+</body>
+</html>
